@@ -1,0 +1,74 @@
+# =======================
+# Xcode / Swift / iOS
+# =======================
+
+# User settings
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Build products
+build/
+DerivedData/
+*.o
+*.linkfilelist
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Package managers
+# CocoaPods
+Pods/
+# Carthage
+Carthage/Build/
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# Xcode generated
+*.xcuserstate
+*.xcuserdatad
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+
+# Simulator stuff
+*.simstate
+
+# =======================
+# Terraform
+# =======================
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# Override files (except when you want to commit them)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform plan output
+*.plan
+
+# =======================
+# General ignores
+# =======================
+.DS_Store
+.idea/
+.vscode/
+*.swp
