@@ -12,6 +12,7 @@ final class OnboardingViewModel: ObservableObject {
     // Inputs / State
     @Published var currentPage: Int = 0
     @Published var isAnimating: Bool = false
+    @Published var navigateToSignIn: Bool = false
 
     // Data
     @Published private(set) var pages: [OnboardingItem]
@@ -21,12 +22,8 @@ final class OnboardingViewModel: ObservableObject {
     var pageCount: Int { pages.count }
     var buttonTitle: String { isLastPage ? "Get Started" : "Next" }
 
-    // Completion handler (inject from caller if you want to act on finish)
-    var onComplete: (() -> Void)?
-
-    init(pages: [OnboardingItem] = OnboardingItem.sampleData, onComplete: (() -> Void)? = nil) {
+    init(pages: [OnboardingItem] = OnboardingItem.sampleData) {
         self.pages = pages
-        self.onComplete = onComplete
     }
 
     // MARK: - Lifecycle
@@ -39,7 +36,7 @@ final class OnboardingViewModel: ObservableObject {
 
     // MARK: - Actions
     func next() {
-        guard !isLastPage else { onComplete?(); return }
+        guard !isLastPage else { navigateSignIn(); return }
         currentPage += 1
         // retrigger per-page animations
         isAnimating = false
@@ -47,4 +44,9 @@ final class OnboardingViewModel: ObservableObject {
             self?.isAnimating = true
         }
     }
+    
+    func navigateSignIn(){
+        navigateToSignIn.toggle()
+    }
 }
+
