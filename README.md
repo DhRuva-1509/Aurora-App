@@ -1,6 +1,6 @@
 # Aurora-App
 
-This App is currently in developed and will be completed by end of October. Following are the feature of the app:
+This App is currently in development and will be completed by end of October. Following are the features of the app:
 1. Extended Aurora LLM’s empathic conversational AI into a user-friendly iOS mobile app, enabling emotion-aware chat experiences for users by leveraging Retrieval-Augmented Generation (RAG) with AWS cloud services.
 2. Improved accessibility and engagement by integrating audio (speech-to-text and text-to-speech) pipelines.
 3. Streamlined backend workflow by deploying emotion sentiment analysis (custom BERT) and scalable LLM inference on
