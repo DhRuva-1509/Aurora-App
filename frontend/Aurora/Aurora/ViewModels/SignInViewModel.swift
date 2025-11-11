@@ -13,6 +13,7 @@ public final class SignInViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isPasswordVisible: Bool = false
+    @Published var isSignInComplete: Bool = false
     
     //MARK: - Outputs
     @Published var errorMessage: String = ""
@@ -24,6 +25,6 @@ public final class SignInViewModel: ObservableObject {
     
     
     func signIn() {
-        
+        isSignInComplete = true
     }
 }

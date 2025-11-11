@@ -86,7 +86,7 @@ struct SignInView: View {
                                     .foregroundStyle(.gray)
                             }
                             Button{
-                                
+                                signInViewModel.signIn()
                             }label: {
                                 Text("Sign In")
                                     .font(.system(.title3, design: .rounded))
@@ -98,7 +98,9 @@ struct SignInView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 20))
                                     .shadow(color: Color.blue.opacity(0.3), radius: 10, x: 0, y: 5)
                             }
-                            
+                            .navigationDestination(isPresented: $signInViewModel.isSignInComplete){
+                                HomePage()
+                            }
                             
                             HStack {
                                 Text("Don't have an account?")

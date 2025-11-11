@@ -6,23 +6,45 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct HomePage: View {
     @State var isAnimation: Bool = false
     var body: some View {
-        ZStack {
+       
+        VStack{
+            Spacer()
             
-            ParticleAnimation()
-                .frame(width: 280, height: 280)
-//                .scaleEffect(isAnimation ? 1.02 : 1.3)
-//                .animation(
-//                    .easeInOut(duration: 1.7)
-//                        .repeatForever(autoreverses: true),
-//                    value: isAnimation
-//                )
-        }
-        .onAppear { isAnimation = true }
-        .onDisappear { isAnimation = false }
+                ParticleAnimation()
+                    .frame(width: 280, height: 280)
+                    .scaleEffect(isAnimation ? 1.02 : 1.3)
+                    .animation(
+                        .easeInOut(duration: 1.7)
+                            .repeatForever(autoreverses: true),
+                        value: isAnimation
+                    )
+                    .onAppear { isAnimation = true }
+                    .onDisappear { isAnimation = false }
+                Spacer()
+            
+            
+            Button{
+              
+            }label: {
+                ZStack{
+                    Circle()
+                        .frame(width: 80, height: 80)
+                        .foregroundStyle(Color.blue)
+                    
+                    Image(systemName: "mic.fill")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(.white)
+                    }
+            }
+            
+            
+              Spacer()
+            }
     }
 }
 
