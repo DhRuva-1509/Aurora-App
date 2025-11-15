@@ -20,7 +20,7 @@ struct ParticleAnimation: View {
     @State private var particles: [Particle] = []
     @State private var innerParticles: [Particle] = []
     private let particleCount = 100
-    private let innerParticleCount = 0
+    private let innerParticleCount = 1000
     private let connectionDistance: CGFloat = 100
 
     // Timer firing at ~60fps

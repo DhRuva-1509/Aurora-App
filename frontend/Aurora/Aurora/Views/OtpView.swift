@@ -11,6 +11,8 @@ struct OtpView: View {
     @StateObject var forgotPasswordViewModel = ForgotPasswordViewModel()
     @State var isAnimation: Bool = false
     @FocusState private var isOTPFieldFocused: Bool
+    let email: String
+    let flow: String
     
     var body: some View {
         NavigationStack{
@@ -60,6 +62,9 @@ struct OtpView: View {
                             
                         
                             Button{
+                                Task{
+                                    await forgotPasswordViewModel.verifyOtp(otp: forgotPasswordViewModel.otp, flow: flow, username: email)
+                                }
                                 
                             }label: {
                                 Text("Verify Otp")
@@ -72,6 +77,8 @@ struct OtpView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 20))
                                     .shadow(color: Color.blue.opacity(0.3), radius: 10, x: 0, y: 5)
                             }.disableWithOpacity(forgotPasswordViewModel.otp.count < 6)
+                                .navigationDestination(isPresented: $forgotPasswordViewModel.isNavigateToSignIn, destination: {SignInView()})
+                                .navigationDestination(isPresented: $forgotPasswordViewModel.isNavigateToResetPassword, destination: {ResetPasswordView(email: email, otp: forgotPasswordViewModel.otp)})
                             
                         }.padding()
                     
@@ -103,7 +110,7 @@ struct OtpView: View {
 
 
 #Preview {
-    OtpView()
+    OtpView( email: "", flow: "")
 }
 
 extension Binding where Value == String {

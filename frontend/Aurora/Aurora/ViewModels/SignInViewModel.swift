@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Amplify
 
 public final class SignInViewModel: ObservableObject {
     //MARK: - Inputs
@@ -24,7 +25,25 @@ public final class SignInViewModel: ObservableObject {
     }
     
     
-    func signIn() {
-        isSignInComplete = true
+    func signIn(username: String, password: String) async {
+        do {
+            let session = try await Amplify.Auth.fetchAuthSession()
+            if session.isSignedIn{
+                print("A user is already signed in, signing them out first")
+                try await Amplify.Auth.signOut()
+            }
+            let signInResult = try await Amplify.Auth.signIn(
+                username: username,
+                password: password)
+            
+            if signInResult.isSignedIn {
+                print("Sign In")
+                isSignInComplete = true
+            }
+        } catch let error as AuthError {
+            print("Sign In failed \(error)")
+        }catch {
+            print("Unexpected error: \(error)")
+        }
     }
 }

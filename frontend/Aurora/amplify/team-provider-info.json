@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aurora-dev-b27a6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::796973501829:role/amplify-aurora-dev-b27a6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::796973501829:role/amplify-aurora-dev-b27a6-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-aurora-dev-b27a6-deployment",
+      "UnauthRoleName": "amplify-aurora-dev-b27a6-unauthRole",
+      "StackName": "amplify-aurora-dev-b27a6",
+      "StackId": "arn:aws:cloudformation:ca-central-1:796973501829:stack/amplify-aurora-dev-b27a6/80e94700-c10e-11f0-ac2a-023fbd32c34f",
+      "AmplifyAppId": "d3e1yq9ueyb5dn"
+    },
+    "categories": {
+      "auth": {
+        "aurora3cb4b65e": {}
+      }
+    }
+  }
+}

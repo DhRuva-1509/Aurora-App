@@ -52,7 +52,10 @@ struct ForgotPasswordView: View {
                             )
                         
                             Button{
-                                forgotPasswordViewModel.sendOtp()
+                                Task {
+                                    await forgotPasswordViewModel.sendOtp(username: forgotPasswordViewModel.email)
+                                }
+                                
                             }label: {
                                 Text("Send OTP")
                                     .font(.system(.title3, design: .rounded))
@@ -64,7 +67,7 @@ struct ForgotPasswordView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 20))
                                     .shadow(color: Color.blue.opacity(0.3), radius: 10, x: 0, y: 5)
                             }
-                            .navigationDestination(isPresented: $forgotPasswordViewModel.isNavigateToVerifyOtp, destination: {OtpView()})
+                            .navigationDestination(isPresented: $forgotPasswordViewModel.isNavigateToVerifyOtp, destination: {OtpView( email: forgotPasswordViewModel.email, flow: "forgotPasswordFlow")})
                         }.padding()
                         Spacer()
                     }

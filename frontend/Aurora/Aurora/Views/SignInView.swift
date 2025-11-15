@@ -86,7 +86,9 @@ struct SignInView: View {
                                     .foregroundStyle(.gray)
                             }
                             Button{
-                                signInViewModel.signIn()
+                                Task {
+                                    await signInViewModel.signIn(username: signInViewModel.email, password: signInViewModel.password)
+                                }
                             }label: {
                                 Text("Sign In")
                                     .font(.system(.title3, design: .rounded))

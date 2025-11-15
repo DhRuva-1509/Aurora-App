@@ -132,7 +132,16 @@ struct SignUpView: View {
                             )
                             
                             Button{
-                                
+                                Task {
+                                    await signUpViewModel.validateCredentials(
+                                        fullName: signUpViewModel.fullName,
+                                        email: signUpViewModel.email,
+                                        password: signUpViewModel.password,
+                                        confirmPassword: signUpViewModel.confirmPassword
+                                    )
+                                    
+                                    
+                                }
                             }label: {
                                 Text("Sign Up")
                                     .font(.system(.title3, design: .rounded))
@@ -143,7 +152,7 @@ struct SignUpView: View {
                                     .background(Color.blue)
                                     .clipShape(RoundedRectangle(cornerRadius: 20))
                                     .shadow(color: Color.blue.opacity(0.3), radius: 10, x: 0, y: 5)
-                            }
+                            }.navigationDestination(isPresented: $signUpViewModel.navigateToOtpScreen){OtpView(email: signUpViewModel.email, flow: "signUpFlow")}
                             
                             
                             HStack {
@@ -169,3 +178,4 @@ struct SignUpView: View {
 #Preview {
     SignUpView()
 }
+
