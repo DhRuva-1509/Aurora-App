@@ -69,11 +69,29 @@ public final class ForgotPasswordViewModel: ObservableObject {
                 confirmationCode: otpCode
             )
             print("Confirm sign up result completed: \(confirmSignUpResult.isSignUpComplete)")
-            isNavigateToSignIn.toggle()
+            isNavigateToSignIn = true
         }catch let error as AuthError{
             print("An error occurred while confirming sign up \(error)")
         } catch {
             print("Unexpected error: \(error)")
+        }
+    }
+    
+    func validPasswordFormat(password: String) -> Bool {
+        let passwordRegex = #"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$"#
+        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+    }
+    
+    func validatePassword(username: String, otp: String, password: String, confirmPassword: String) async {
+        if(password != confirmPassword){
+            print("Password")
+        }
+        
+        else if(!validPasswordFormat(password: password)){
+            print("Weak password")
+        }
+        else {
+            await confirmResetPassword(username: username, newPassword: password, otp: otp)
         }
     }
     
@@ -86,6 +104,7 @@ public final class ForgotPasswordViewModel: ObservableObject {
                 confirmationCode: otp)
             
             print("Reset Password Successful")
+            isNavigateToSignIn = true
         } catch let error as AuthError {
             print("Reset password failed with error \(error)")
         } catch {

@@ -94,8 +94,7 @@ struct ResetPasswordView: View {
                         
                         Button{
                             Task{
-                                await forgotPasswordViewModel.confirmResetPassword(username: email, newPassword: forgotPasswordViewModel.password, otp: otp)
-                                
+                                await forgotPasswordViewModel.validatePassword(username: email, otp: otp, password: forgotPasswordViewModel.password, confirmPassword: forgotPasswordViewModel.confirmPassword)
                             }
                             
                         }label: {
