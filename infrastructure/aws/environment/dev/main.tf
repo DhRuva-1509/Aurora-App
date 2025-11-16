@@ -10,18 +10,13 @@ provider "aws" {
   }
 }
 
-#############################################
-# 1. CREATE THE REST API (ONLY ONCE)
-#############################################
-
+# 1. CREATE THE REST API
 resource "aws_api_gateway_rest_api" "aurora_api" {
   name = "aurora-mobile-api-dev"
 }
 
 
-#############################################
 # 2. LAMBDA MODULE — ASR HANDLER
-#############################################
 
 module "asr_lambda" {
   source  = "../../modules/lambda"
@@ -33,19 +28,7 @@ module "asr_lambda" {
   timeout  = 30
 }
 
-
-#############################################
-# 3. REMOVE temp_api (THIS WAS WRONG)
-#############################################
-# ❌ DELETE THIS — DO NOT INCLUDE THIS ANYMORE
-# resource "aws_api_gateway_rest_api" "temp_api" {
-#   name = "aurora-api-dev"
-# }
-
-
-#############################################
 # 4. COGNITO AUTHORIZER (on SAME REST API)
-#############################################
 
 module "cognito_authorizer" {
   source        = "../../modules/authorizer"
@@ -54,9 +37,7 @@ module "cognito_authorizer" {
 }
 
 
-#############################################
 # 5. API GATEWAY MODULE (POST /asr)
-#############################################
 
 module "asr_api" {
   source = "../../modules/api-gateway"
@@ -78,9 +59,7 @@ module "asr_api" {
 }
 
 
-#############################################
 # 6. OUTPUTS
-#############################################
 
 output "api_invoke_url" {
   description = "Invoke URL for POST /asr endpoint"
