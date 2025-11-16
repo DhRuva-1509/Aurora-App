@@ -14,3 +14,7 @@ variable "cognito_user_pool_id" {
 variable "stage_name" {
   default = "dev"
 }
+variable "lambda_worker_zip_path" {
+  description = "Path to the zip file for the BERT worker lambda"
+  type        = string
+}

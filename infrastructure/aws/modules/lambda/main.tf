@@ -21,9 +21,34 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec.arn
   handler       = var.handler
   runtime       = var.runtime
+  timeout       = var.timeout
 
   filename         = var.zip_path
   source_code_hash = filebase64sha256(var.zip_path)
 
-  timeout = var.timeout
+  environment {
+    variables = {
+      SQS_URL = var.sqs_url
+    }
+  }
 }
+
+
+resource "aws_iam_role_policy" "sqs_send_message" {
+  name = "${var.name}-sqs-send-policy"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:SendMessage"
+        ]
+        Resource = var.sqs_arn
+      }
+    ]
+  })
+}
+

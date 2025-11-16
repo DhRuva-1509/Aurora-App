@@ -1,6 +1,5 @@
-###########################################################
+
 # Resource path:  /asr
-###########################################################
 
 resource "aws_api_gateway_resource" "resource" {
   rest_api_id = var.rest_api_id
@@ -8,9 +7,7 @@ resource "aws_api_gateway_resource" "resource" {
   path_part   = var.path
 }
 
-###########################################################
 # Method: POST /asr (protected by Cognito authorizer)
-###########################################################
 
 resource "aws_api_gateway_method" "method" {
   rest_api_id   = var.rest_api_id
@@ -20,9 +17,7 @@ resource "aws_api_gateway_method" "method" {
   authorizer_id = var.authorizer_id
 }
 
-###########################################################
 # Integration: Lambda proxy
-###########################################################
 
 resource "aws_api_gateway_integration" "integration" {
   rest_api_id             = var.rest_api_id
@@ -33,9 +28,7 @@ resource "aws_api_gateway_integration" "integration" {
   uri                     = var.lambda_invoke_arn
 }
 
-###########################################################
 # Lambda permission for API Gateway
-###########################################################
 
 resource "aws_lambda_permission" "allow_apigw" {
   statement_id  = "AllowInvokeViaAPIGateway"
@@ -45,9 +38,7 @@ resource "aws_lambda_permission" "allow_apigw" {
   source_arn    = "${var.rest_api_execution_arn}/*/*"
 }
 
-###########################################################
 # Deployment + Stage
-###########################################################
 
 resource "aws_api_gateway_deployment" "deploy" {
   depends_on = [aws_api_gateway_integration.integration]

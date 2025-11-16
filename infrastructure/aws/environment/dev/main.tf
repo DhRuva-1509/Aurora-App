@@ -15,9 +15,7 @@ resource "aws_api_gateway_rest_api" "aurora_api" {
   name = "aurora-mobile-api-dev"
 }
 
-
 # 2. LAMBDA MODULE — ASR HANDLER
-
 module "asr_lambda" {
   source  = "../../modules/lambda"
 
@@ -26,9 +24,12 @@ module "asr_lambda" {
   runtime  = "python3.11"
   zip_path = var.lambda_zip_path
   timeout  = 30
+
+  sqs_arn = module.asr_queue.queue_arn
+  sqs_url = module.asr_queue.queue_url
 }
 
-# 4. COGNITO AUTHORIZER (on SAME REST API)
+# 3. COGNITO AUTHORIZER
 
 module "cognito_authorizer" {
   source        = "../../modules/authorizer"
@@ -36,14 +37,13 @@ module "cognito_authorizer" {
   rest_api_id   = aws_api_gateway_rest_api.aurora_api.id
 }
 
-
-# 5. API GATEWAY MODULE (POST /asr)
+# 4. API GATEWAY MODULE (POST /asr)
 
 module "asr_api" {
   source = "../../modules/api-gateway"
 
-  rest_api_id           = aws_api_gateway_rest_api.aurora_api.id
-  rest_api_root_id      = aws_api_gateway_rest_api.aurora_api.root_resource_id
+  rest_api_id            = aws_api_gateway_rest_api.aurora_api.id
+  rest_api_root_id       = aws_api_gateway_rest_api.aurora_api.root_resource_id
   rest_api_execution_arn = aws_api_gateway_rest_api.aurora_api.execution_arn
 
   path                  = "asr"
@@ -58,11 +58,37 @@ module "asr_api" {
   region                = var.aws_region
 }
 
+# 5. SQS QUEUE (ASR → WORKER)
 
-# 6. OUTPUTS
+module "asr_queue" {
+  source     = "../../modules/sqs"
+  queue_name = "aurora-asr-queue"
+}
+
+# 6. BERT WORKER LAMBDA (Triggered by SQS)
+
+module "lambda_bert" {
+  source  = "../../modules/lambda-bert"
+
+  name     = "aurora-bert-worker"
+  handler  = "bert_worker.lambda_handler"
+  runtime  = "python3.11"
+  zip_path = var.lambda_worker_zip_path
+  timeout  = 30
+
+  sqs_arn = module.asr_queue.queue_arn
+}
+# 7. OUTPUTS
 
 output "api_invoke_url" {
   description = "Invoke URL for POST /asr endpoint"
   value       = module.asr_api.invoke_url
 }
 
+output "sqs_queue_arn" {
+  value = module.asr_queue.queue_arn
+}
+
+output "bert_worker_lambda" {
+  value = module.lambda_bert.function_name
+}
