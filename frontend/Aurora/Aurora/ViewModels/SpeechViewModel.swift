@@ -2,8 +2,6 @@
 //  SpeechViewModel.swift
 //  Aurora
 //
-//  Created by Dhruva Patil on 2025-11-16.
-//
 
 import Foundation
 import Speech
@@ -21,6 +19,7 @@ final class SpeechViewModel: ObservableObject {
     
     @Published var volatileTranscript: String = ""
     @Published var finalizedTranscript: String = ""
+    @Published var backendResponse: String = ""
     @Published var isRecording = false
     
     // MARK: - Public API
@@ -28,6 +27,8 @@ final class SpeechViewModel: ObservableObject {
     func startRecording() {
         finalizedTranscript = ""
         volatileTranscript = ""
+        backendResponse = ""
+        
         print("startRecording()")
         
         Task { [weak self] in
@@ -38,35 +39,54 @@ final class SpeechViewModel: ObservableObject {
     func stopRecording() {
         print("stopRecording()")
         
+        // Stop tasks
         captureTask?.cancel()
         transcriptionTask?.cancel()
         
+        // Stop mic
         capturer?.stopCapturing()
         
+        // Finish transcriber
         Task { [weak transcriber] in
             await transcriber?.finishAnalysisSession()
         }
         
         isRecording = false
         volatileTranscript = ""
-        // keep finalized if you want history
+        
+        // SEND FULL TEXT TO API
+        let textToSend = finalizedTranscript
+        
+        Task {
+            do {
+                print("📡 Sending final transcript to backend...")
+                let response = try await ApiService.shared.sendTranscript(textToSend)
+                
+                await MainActor.run {
+                    self.backendResponse = response
+                }
+                
+                print("Backend Response:", response)
+                
+            } catch {
+                print("API Error:", error)
+            }
+        }
     }
     
-    // MARK: - Private internal function
+    // MARK: - Internal
     
     private func _startRecording() async {
         do {
-            // 1. Transcriber
+            // 1. Create transcriber
             let transcriber = try await Transcriber(locale: Locale(identifier: "en-US"))
             self.transcriber = transcriber
-            
             try await transcriber.startRealTimeTranscription()
             print("🎙 Transcriber Ready")
             
-            // 2. Microphone Capturer
+            // 2. Start microphone capture
             let capturer = try AudioCapturer()
             self.capturer = capturer
-            
             try await capturer.startCapturingInput()
             print("🎤 Mic Audio Engine Started")
             
@@ -88,13 +108,12 @@ final class SpeechViewModel: ObservableObject {
                 do {
                     for try await result in transcriber.transcriptionResults {
                         
-                        // Extract pure text only (no metadata!)
+                        // Extract plain text
                         let attributed = result.text
                         let plain = String(attributed.characters)
-
                         
                         if result.isFinal {
-                            // FINALIZED TEXT
+                            // Final text → accumulate
                             await MainActor.run {
                                 if self.finalizedTranscript.isEmpty {
                                     self.finalizedTranscript = plain
@@ -104,7 +123,7 @@ final class SpeechViewModel: ObservableObject {
                                 self.volatileTranscript = ""
                             }
                         } else {
-                            // VOLATILE TEXT
+                            // Live text
                             await MainActor.run {
                                 self.volatileTranscript = plain
                             }

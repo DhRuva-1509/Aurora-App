@@ -1,8 +1,3 @@
-output "user_pool_id" {
-  value = module.cognito.user_pool_id
-}
-
-output "client_id" {
-  value = module.cognito.user_pool_client_id
-  sensitive = true
+output "lambda_function_name" {
+  value = module.asr_lambda.function_name
 }

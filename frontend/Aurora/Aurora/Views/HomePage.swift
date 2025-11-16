@@ -2,8 +2,6 @@
 //  HomePage.swift
 //  Aurora
 //
-//  Created by Dhruva Patil on 2025-10-07.
-//
 
 import SwiftUI
 import AVFoundation
@@ -47,7 +45,7 @@ struct HomePage: View {
                 .cornerRadius(12)
                 
                 
-                // FINALIZED (stable)
+                // FINAL OUTPUT
                 if !vm.finalizedTranscript.isEmpty {
                     Text(vm.finalizedTranscript)
                         .font(.title2)
@@ -57,13 +55,22 @@ struct HomePage: View {
                         .padding(.horizontal)
                 }
                 
-                // VOLATILE (live)
+                // LIVE OUTPUT
                 if !vm.volatileTranscript.isEmpty {
                     Text(vm.volatileTranscript)
                         .font(.title3)
                         .foregroundColor(.gray)
                         .italic()
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                
+                // BACKEND RESPONSE (AFTER STOP)
+                if !vm.backendResponse.isEmpty {
+                    Text(vm.backendResponse)
+                        .font(.title3)
+                        .foregroundColor(.green)
+                        .padding(.top, 25)
                         .padding(.horizontal)
                 }
             }
